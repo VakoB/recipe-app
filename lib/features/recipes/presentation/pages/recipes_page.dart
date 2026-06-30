@@ -7,45 +7,12 @@ import 'package:recipe_app/features/recipes/domain/entities/recipe.dart';
 import 'package:recipe_app/features/recipes/presentation/cubit/recipes_cubit.dart';
 import 'package:recipe_app/features/recipes/presentation/cubit/recipes_state.dart';
 import 'package:recipe_app/features/recipes/presentation/pages/recipe_details_page.dart';
+import 'package:recipe_app/features/user_profile/presentation/pages/profile_page.dart';
 
 import '../widgets/category_chips.dart';
 import '../widgets/featured_recipe_card.dart';
 import '../widgets/recipe_grid_card.dart';
 import '../widgets/recipe_search_bar.dart';
-
-// final mockFeatured = Recipe(
-//   name: 'Spaghetti Carbonara',
-//   image: '🍝',
-//   prepTimeMinutes: 25,
-//   difficulty: 'Easy',
-// );
-
-// final mockRecipes = [
-//   Recipe(
-//     name: 'Greek Salad',
-//     image: '🥗',
-//     prepTimeMinutes: 15,
-//     difficulty: 'Easy',
-//   ),
-//   Recipe(
-//     name: 'Ramen Bowl',
-//     image: '🍜',
-//     prepTimeMinutes: 45,
-//     difficulty: 'Medium',
-//   ),
-//   Recipe(
-//     name: 'Chicken Curry',
-//     image: '🥘',
-//     prepTimeMinutes: 40,
-//     difficulty: 'Medium',
-//   ),
-//   Recipe(
-//     name: 'Fluffy Pancakes',
-//     image: '🥞',
-//     prepTimeMinutes: 20,
-//     difficulty: 'Easy',
-//   ),
-// ];
 
 class RecipesPage extends StatelessWidget {
   const RecipesPage({super.key});
@@ -103,19 +70,36 @@ class _RecipesContent extends StatelessWidget {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Recipes',
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Recipes',
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'What are you cooking today?',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  'What are you cooking today?',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                IconButton(
+                  icon: const Icon(Icons.person_outline),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ProfilePage()),
+                    );
+                  },
                 ),
               ],
             ),
@@ -155,35 +139,43 @@ class _RecipesContent extends StatelessWidget {
             ),
           ),
         ),
-
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          sliver: SliverGrid(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              final recipe = popularRecipes[index];
+          sliver: Builder(
+            builder: (context) {
+              final screenWidth = MediaQuery.of(context).size.width;
+              final crossAxisCount = screenWidth < 600
+                  ? 2
+                  : screenWidth < 900
+                  ? 3
+                  : 4;
 
-              return RecipeGridCard(
-                recipe: recipe,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => RecipeDetailsPage(recipe: recipe),
-                    ),
+              return SliverGrid(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final recipe = popularRecipes[index];
+                  return RecipeGridCard(
+                    recipe: recipe,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => RecipeDetailsPage(recipe: recipe),
+                        ),
+                      );
+                    },
+                    index: index,
                   );
-                },
-                index: index,
+                }, childCount: popularRecipes.length),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 1,
+                ),
               );
-            }, childCount: popularRecipes.length),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 1,
-            ),
+            },
           ),
         ),
-
         const SliverToBoxAdapter(child: SizedBox(height: 24)),
       ],
     );

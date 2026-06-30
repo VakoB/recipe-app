@@ -11,9 +11,4 @@ class RecipeRepositoryImpl implements RecipeRepository {
   Future<List<Recipe>> getRecipes() async {
     return remoteDataSource.getRecipes();
   }
-
-  @override
-  Future<Recipe> getRecipeDetail(int id) async {
-    return remoteDataSource.getRecipeDetail(id);
-  }
 }

@@ -3,7 +3,6 @@ import '../models/recipe_model.dart';
 
 abstract class RecipeRemoteDataSource {
   Future<List<RecipeModel>> getRecipes();
-  Future<RecipeModel> getRecipeDetail(int id);
 }
 
 class RecipeRemoteDataSourceImpl implements RecipeRemoteDataSource {
@@ -20,11 +19,5 @@ class RecipeRemoteDataSourceImpl implements RecipeRemoteDataSource {
     return recipes
         .map((e) => RecipeModel.fromJson(e as Map<String, dynamic>))
         .toList();
-  }
-
-  @override
-  Future<RecipeModel> getRecipeDetail(int id) async {
-    final response = await dio.get('/recipes/$id');
-    return RecipeModel.fromJson(response.data);
   }
 }

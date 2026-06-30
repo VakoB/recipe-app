@@ -13,7 +13,7 @@ class RecipeDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final totalTime =
-        recipe.prepTimeMinutes;
+        recipe.prepTimeMinutes + recipe.cookTimeMinutes;
 
     return Scaffold(
       body: CustomScrollView(
