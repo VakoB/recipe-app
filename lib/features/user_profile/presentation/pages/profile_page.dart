@@ -32,20 +32,47 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-class _ProfileView extends StatelessWidget {
+class _ProfileView extends StatefulWidget {
   final String uid;
   const _ProfileView({required this.uid});
+
+  @override
+  State<_ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<_ProfileView> {
+  late Future<UserProfile?> _profileFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileFuture = sl<UserProfileRepository>().getProfile(widget.uid);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder<UserProfile?>(
-          future: sl<UserProfileRepository>().getProfile(uid),
+          future: _profileFuture,
           builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
+            if (snapshot.hasError) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Text(
+                    'Failed to load profile:\n${snapshot.error}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+              );
             }
+
+            if (!snapshot.hasData || snapshot.data == null) {
+              return const Center(child: Text('Profile details not found.'));
+            }
+
             final profile = snapshot.data!;
 
             return BlocBuilder<FavoritesCubit, FavoritesState>(
@@ -63,7 +90,7 @@ class _ProfileView extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          icon: Icon(Icons.arrow_back),
+                          icon: const Icon(Icons.arrow_back),
                         ),
                       ),
                     ),

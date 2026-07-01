@@ -22,7 +22,7 @@ class FirestoreUserProfileRepositoryImpl implements UserProfileRepository {
   @override
   Future<UserProfile?> getProfile(String uid) async {
     final doc = await _firestore.collection('users').doc(uid).get();
-    if (!doc.exists) return null;
+    if (!doc.exists) {return null; print('DEBUG: No document found');}
     return UserProfileModel.fromJson(doc.data()!);
   }
 }
