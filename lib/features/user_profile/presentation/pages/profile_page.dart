@@ -56,6 +56,10 @@ class _ProfileViewState extends State<_ProfileView> {
         child: FutureBuilder<UserProfile?>(
           future: _profileFuture,
           builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
             if (snapshot.hasError) {
               return Center(
                 child: Padding(
@@ -70,7 +74,7 @@ class _ProfileViewState extends State<_ProfileView> {
             }
 
             if (!snapshot.hasData || snapshot.data == null) {
-              return const Center(child: Text('Profile details not found.'));
+              return const Center(child: Text('Profile not found.'));
             }
 
             final profile = snapshot.data!;

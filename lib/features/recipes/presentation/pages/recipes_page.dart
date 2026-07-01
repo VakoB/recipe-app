@@ -170,7 +170,7 @@ class _RecipesContent extends StatelessWidget {
                   crossAxisCount: crossAxisCount,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                  childAspectRatio: 1,
+                  childAspectRatio: 0.85,
                 ),
               );
             },

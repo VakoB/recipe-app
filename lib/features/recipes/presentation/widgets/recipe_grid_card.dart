@@ -122,6 +122,7 @@ class _RecipeGridCardState extends State<RecipeGridCard> {
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       widget.recipe.name,
@@ -137,11 +138,14 @@ class _RecipeGridCardState extends State<RecipeGridCard> {
                       children: [
                         const Icon(Icons.schedule, size: 12),
                         const SizedBox(width: 3),
-                        Text(
-                          '${widget.recipe.prepTimeMinutes + widget.recipe.cookTimeMinutes} min',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey,
+                        Flexible(
+                          child: Text(
+                            '${widget.recipe.prepTimeMinutes + widget.recipe.cookTimeMinutes} min',
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         const SizedBox(width: 6),
